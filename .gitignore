@@ -1,3 +1,5 @@
+#Expo 
+.expo/*
 # Xcode
 !**/*.xcodeproj
 !**/*.pbxproj
