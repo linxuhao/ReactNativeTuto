@@ -15,6 +15,7 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
   _myRect2;
   _myRect3;
   _myRect4;
+  AnimatedRect;
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +29,7 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
       this._myRect3.setNativeProps({ fill: fillColor });
       this._myRect4.setNativeProps({ fill: fillColor });
     });
+    this.AnimatedRect = Animated.createAnimatedComponent(Rect);
   }
 
   private getImageUri(uri: string): string {
@@ -36,8 +38,8 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
 
   render() {
     let winrate = (this.props.hero.pro_win / this.props.hero.pro_pick) * 100;
-    let AnimatedRect = Animated.createAnimatedComponent(Rect);
     let fillColor : Color = this.updateFillColor(this.state.animatedValue);
+
     return (
       <View style={styles.main_container}>
         <Image
@@ -51,13 +53,13 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
                         transform: [
                             {
                                 scaleX: this.state.animatedValue.interpolate({
-                                    inputRange: [0, 50, 100],
+                                    inputRange: [0, 22, 100],
                                     outputRange: [1, 2, 1]
                                 })
                             },
                             {
                                 scaleY: this.state.animatedValue.interpolate({
-                                    inputRange: [0, 50, 100],
+                                    inputRange: [0, 88, 100],
                                     outputRange: [1, 2, 1]
                                 })
                             }
@@ -70,10 +72,10 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
                   </ClipPath>
                 </Defs>
                 <G clipPath="url(#clip-rule-clip)">
-                  <AnimatedRect ref={ ref => this._myRect1 = ref } x="0" y="0" width="20" height="20" fill={fillColor}/>
-                  <AnimatedRect ref={ ref => this._myRect2 = ref } x="20" y="0" width="20" height="20" fill={fillColor}/>
-                  <AnimatedRect ref={ ref => this._myRect3 = ref } x="0" y="20" width="20" height="20" fill={fillColor}/>
-                  <AnimatedRect ref={ ref => this._myRect4 = ref } x="20" y="20" width="20" height="20" fill={fillColor}/>
+                  <this.AnimatedRect ref={ ref => this._myRect1 = ref } x="0" y="0" width="20" height="20" fill={fillColor}/>
+                  <this.AnimatedRect ref={ ref => this._myRect2 = ref } x="20" y="0" width="20" height="20" fill={fillColor}/>
+                  <this.AnimatedRect ref={ ref => this._myRect3 = ref } x="0" y="20" width="20" height="20" fill={fillColor}/>
+                  <this.AnimatedRect ref={ ref => this._myRect4 = ref } x="20" y="20" width="20" height="20" fill={fillColor}/>
                 </G>
               </Svg>
             </Animated.View>
