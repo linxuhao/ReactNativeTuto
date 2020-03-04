@@ -47,7 +47,22 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
 
         <View style={styles.content_container}>
           <View style={styles.header_container}>
-            <View>
+            <Animated.View style={{
+                        transform: [
+                            {
+                                scaleX: this.state.animatedValue.interpolate({
+                                    inputRange: [0, 50, 100],
+                                    outputRange: [1, 2, 1]
+                                })
+                            },
+                            {
+                                scaleY: this.state.animatedValue.interpolate({
+                                    inputRange: [0, 50, 100],
+                                    outputRange: [1, 2, 1]
+                                })
+                            }
+                        ]
+                    }}>
               <Svg height="40" width="40" onPress={() => this.props.toggleHeroFavoriteStatus(this.props.hero.id, this.state.animatedValue, this)}>
                 <Defs>
                   <ClipPath id="clip-rule-clip">
@@ -61,7 +76,7 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
                   <AnimatedRect ref={ ref => this._myRect4 = ref } x="20" y="20" width="20" height="20" fill={fillColor}/>
                 </G>
               </Svg>
-            </View>
+            </Animated.View>
 
             <Text style={styles.title_text}>
               {this.props.hero.localized_name}
