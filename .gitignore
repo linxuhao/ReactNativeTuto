@@ -1,5 +1,5 @@
 #Expo 
-.expo/*
+.expo/
 # Xcode
 !**/*.xcodeproj
 !**/*.pbxproj
@@ -102,3 +102,4 @@ RNTester/Pods/*
 # Visual studio
 .vscode
 .vs
+
