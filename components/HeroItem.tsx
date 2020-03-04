@@ -1,7 +1,34 @@
 import React from "react";
-import { StyleSheet, View, Text, Image, FlatList } from "react-native";
+import { StyleSheet, View, Text, Image, FlatList, Animated, processColor } from "react-native";
+import Svg, {
+  Defs,
+  ClipPath,
+  Path,
+  G,
+  Rect,
+  Color
+} from 'react-native-svg';
 
-class HeroItem extends React.Component<{ hero: Hero }, {}> {
+class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: Function }, {animatedValue: Animated.Value}> {
+
+  _myRect1;
+  _myRect2;
+  _myRect3;
+  _myRect4;
+  constructor(props) {
+    super(props);
+    this.state = {
+      animatedValue: new Animated.Value(0)
+    };
+
+    this.state.animatedValue.addListener( (value) => {
+      let fillColor : Color = this.updateFillColor(this.state.animatedValue);
+      this._myRect1.setNativeProps({ fill: fillColor });
+      this._myRect2.setNativeProps({ fill: fillColor });
+      this._myRect3.setNativeProps({ fill: fillColor });
+      this._myRect4.setNativeProps({ fill: fillColor });
+    });
+  }
 
   private getImageUri(uri: string): string {
     return "http://cdn.dota2.com/" + uri;
@@ -9,6 +36,8 @@ class HeroItem extends React.Component<{ hero: Hero }, {}> {
 
   render() {
     let winrate = (this.props.hero.pro_win / this.props.hero.pro_pick) * 100;
+    let AnimatedRect = Animated.createAnimatedComponent(Rect);
+    let fillColor : Color = this.updateFillColor(this.state.animatedValue);
     return (
       <View style={styles.main_container}>
         <Image
@@ -18,6 +47,22 @@ class HeroItem extends React.Component<{ hero: Hero }, {}> {
 
         <View style={styles.content_container}>
           <View style={styles.header_container}>
+            <View>
+              <Svg height="40" width="40" onPress={() => this.props.toggleHeroFavoriteStatus(this.props.hero.id, this.state.animatedValue, this)}>
+                <Defs>
+                  <ClipPath id="clip-rule-clip">
+                    <Path d="M20,2L8,40L38,16L2,16L32,40z" />
+                  </ClipPath>
+                </Defs>
+                <G clipPath="url(#clip-rule-clip)">
+                  <AnimatedRect ref={ ref => this._myRect1 = ref } x="0" y="0" width="20" height="20" fill={fillColor}/>
+                  <AnimatedRect ref={ ref => this._myRect2 = ref } x="20" y="0" width="20" height="20" fill={fillColor}/>
+                  <AnimatedRect ref={ ref => this._myRect3 = ref } x="0" y="20" width="20" height="20" fill={fillColor}/>
+                  <AnimatedRect ref={ ref => this._myRect4 = ref } x="20" y="20" width="20" height="20" fill={fillColor}/>
+                </G>
+              </Svg>
+            </View>
+
             <Text style={styles.title_text}>
               {this.props.hero.localized_name}
             </Text>
@@ -46,6 +91,21 @@ class HeroItem extends React.Component<{ hero: Hero }, {}> {
       </View>
     );
   }
+
+  /**
+   * The only way i found to make Animated.AnimatedInterpolation object to string.........
+   * @param animatedValue the current animated value
+   */
+  private updateFillColor(animatedValue: Animated.Value) : string {
+    let fillColor = JSON.stringify(animatedValue.interpolate({
+      inputRange: [0, 100],
+      outputRange: [
+        "grey",
+        "gold"
+      ]
+    })).replace(new RegExp('"', 'g'), '');
+    return fillColor;
+  }
 }
 
 const styles = StyleSheet.create({
@@ -69,8 +129,9 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   title_text: {
+    marginTop: 10,
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 18,
     flex: 1,
     flexWrap: "wrap",
     paddingRight: 5
@@ -81,8 +142,10 @@ const styles = StyleSheet.create({
     resizeMode: "stretch"
   },
   winrate_text: {
+    marginTop: 10,
+    flex: 0.3,
     fontWeight: "bold",
-    fontSize: 26,
+    fontSize: 20,
     color: "#666666"
   },
   description_text: {

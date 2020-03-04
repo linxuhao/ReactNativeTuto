@@ -1,19 +1,19 @@
 import React from "react";
 import {
   StyleSheet,
-  Text,
   View,
   TextInput,
   Button,
+  FlatList,
   Platform,
   StatusBar,
-  FlatList,
-  ActivityIndicator
 } from "react-native";
 import { getHeroes } from "../helpers/Data";
 import HeroItem from "./HeroItem";
+import { displayLoading } from "../helpers/LoadingHelper"
+import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper"
 
-class Search extends React.Component<{}, { heroes: Hero[]; filteredHeroes: Hero[], isLoading: boolean } > {
+class Search extends React.Component<{}, { heroes: Hero[], filteredHeroes: Hero[], isLoading: boolean } > {
   //Im trying to not call the function setState which triggers re-render everytime i change this value
   //And re-render whenever i change this value is useless here
   _searchString: string;
@@ -91,17 +91,6 @@ class Search extends React.Component<{}, { heroes: Hero[]; filteredHeroes: Hero[
     return result;
   }
 
-  private displayLoading() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.loading_container}>
-          <ActivityIndicator size='large' />
-          {/* Le component ActivityIndicator possède une propriété size pour définir la taille du visuel de chargement : small ou large. Par défaut size vaut small, on met donc large pour que le chargement soit bien visible */}
-        </View>
-      )
-    }
-  }
-
   render() {
     console.log("render");
     //console.log("heroes length : " + this.state.heroes.length);
@@ -126,9 +115,9 @@ class Search extends React.Component<{}, { heroes: Hero[]; filteredHeroes: Hero[
             let id = item.id;
             return id.toString();
           }}
-          renderItem={({ item }) => <HeroItem hero={item} />}
+          renderItem={({ item }) => <HeroItem hero={item} toggleHeroFavoriteStatus = {toggleHeroFavoriteStatus} />}
         />
-        {this.displayLoading()}
+        {displayLoading(this.state.isLoading)}
       </View>
     );
   }
@@ -148,15 +137,6 @@ const styles = StyleSheet.create({
     borderColor: "#000000",
     borderWidth: 1,
     paddingLeft: 5
-  },
-  loading_container: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 100,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center'
   }
 });
 
