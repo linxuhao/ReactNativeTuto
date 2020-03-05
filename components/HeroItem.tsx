@@ -11,10 +11,7 @@ import Svg, {
 
 class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: Function }, {animatedValue: Animated.Value}> {
 
-  _myRect1;
-  _myRect2;
-  _myRect3;
-  _myRect4;
+  _myRect;
   AnimatedRect;
   constructor(props) {
     super(props);
@@ -24,10 +21,7 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
 
     this.state.animatedValue.addListener( (value) => {
       let fillColor : Color = this.updateFillColor(this.state.animatedValue);
-      this._myRect1.setNativeProps({ fill: fillColor });
-      this._myRect2.setNativeProps({ fill: fillColor });
-      this._myRect3.setNativeProps({ fill: fillColor });
-      this._myRect4.setNativeProps({ fill: fillColor });
+      this._myRect.setNativeProps({ fill: fillColor });
     });
     this.AnimatedRect = Animated.createAnimatedComponent(Rect);
   }
@@ -72,10 +66,7 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
                   </ClipPath>
                 </Defs>
                 <G clipPath="url(#clip-rule-clip)">
-                  <this.AnimatedRect ref={ ref => this._myRect1 = ref } x="0" y="0" width="20" height="20" fill={fillColor}/>
-                  <this.AnimatedRect ref={ ref => this._myRect2 = ref } x="20" y="0" width="20" height="20" fill={fillColor}/>
-                  <this.AnimatedRect ref={ ref => this._myRect3 = ref } x="0" y="20" width="20" height="20" fill={fillColor}/>
-                  <this.AnimatedRect ref={ ref => this._myRect4 = ref } x="20" y="20" width="20" height="20" fill={fillColor}/>
+                  <this.AnimatedRect ref={ ref => this._myRect = ref } x="0" y="0" width="40" height="40" fill={fillColor}/>
                 </G>
               </Svg>
             </Animated.View>
