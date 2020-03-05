@@ -7,12 +7,15 @@ import {
   FlatList,
   Platform,
   StatusBar,
+  Animated,
 } from "react-native";
 import { getHeroes } from "../helpers/Data";
 import HeroItem from "./HeroItem";
 import { displayLoading } from "../helpers/LoadingHelper"
+import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper";
+import { connect } from "react-redux";
 
-class Search extends React.Component<{}, { filteredHeroes: Hero[], isLoading: boolean } > {
+class Search extends React.Component<{ favoriteHeroes: Set<number>, dispatch: Function }, { filteredHeroes: Hero[], isLoading: boolean }> {
   //Im trying to not call the function setState which triggers re-render everytime i change this value
   //And re-render whenever i change this value is useless here
   _searchString: string;
@@ -34,7 +37,7 @@ class Search extends React.Component<{}, { filteredHeroes: Hero[], isLoading: bo
     let allHeroes: Hero[] = await this.loadHeros();
     let filteredData: Hero[] = [];
     let lowercaseMatchKey = this._searchString.toLowerCase();
-    
+
     //console.log(allHeroes);
     if (lowercaseMatchKey.length > 0) {
       this.filterHeroesByMathKey(allHeroes, lowercaseMatchKey, filteredData);
@@ -80,10 +83,15 @@ class Search extends React.Component<{}, { filteredHeroes: Hero[], isLoading: bo
     return result;
   }
 
+  private toggleHeroFavoriteStatusOnItem(idHero: number, animated: Animated.Value) {
+    toggleHeroFavoriteStatus(idHero, animated, this.props.dispatch, this.props.favoriteHeroes);
+  }
+
   render() {
     console.log("Search render");
     //console.log("heroes length : " + this.state.heroes.length);
     //console.log("filteredHeroes length : " + this.state.filteredHeroes.length);
+    //console.log(this.props);
     return (
       <View style={styles.main_componenet}>
         <TextInput
@@ -104,7 +112,7 @@ class Search extends React.Component<{}, { filteredHeroes: Hero[], isLoading: bo
             let id = item.id;
             return id.toString();
           }}
-          renderItem={({ item }) => <HeroItem hero={item} />}
+          renderItem={({ item }) => <HeroItem hero={item} isFavorite={this.props.favoriteHeroes.has(item.id)} toggleHeroFavoriteStatus={this.toggleHeroFavoriteStatusOnItem.bind(this)} />}
         />
         {displayLoading(this.state.isLoading)}
       </View>
@@ -129,4 +137,11 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Search;
+const mapStateToProps = (state) => {
+  //console.log("state");
+  //console.log(state);
+  return {
+    favoriteHeroes: state.favoritesHeroes
+  }
+}
+export default connect(mapStateToProps)(Search)

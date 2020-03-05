@@ -9,12 +9,11 @@ import Svg, {
   Color
 } from 'react-native-svg';
 import { connect } from "react-redux";
-import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper"
 
 const FAVORITE_ON = "gold";
 const FAVORITE_OFF = "grey";
 
-class HeroItem extends React.Component<{ hero: Hero, favoriteHeroes: Set<number>, dispatch: Function }, {}> {
+class HeroItem extends React.Component<{ hero: Hero, isFavorite: boolean, toggleHeroFavoriteStatus: Function }, {}> {
 
   _myRect;
   AnimatedRect;
@@ -24,9 +23,9 @@ class HeroItem extends React.Component<{ hero: Hero, favoriteHeroes: Set<number>
     super(props);
     //console.log(this.props);
     this.state = {};
-    this._animatedValue = new Animated.Value(this.props.favoriteHeroes.has(this.props.hero.id) ? 100 : 0);
+    this._animatedValue = new Animated.Value(this.props.isFavorite ? 100 : 0);
     this._animatedValue.addListener((value) => {
-      console.log("animated value changing");
+      //console.log("animated value changing");
       let fillColor: Color = this.updateFillColor(this._animatedValue);
       this._myRect.setNativeProps({ fill: fillColor });
     });
@@ -42,7 +41,7 @@ class HeroItem extends React.Component<{ hero: Hero, favoriteHeroes: Set<number>
     //When the entire view is refreshing, correct the animated value with current favorite status 
     Animated.timing(this._animatedValue, { //Doing set value on the animated value will cause some weird problem...
       duration: 1,
-      toValue: this.props.favoriteHeroes.has(this.props.hero.id) ? 100 : 0,
+      toValue: this.props.isFavorite ? 100 : 0,
     }).start(() => { });
     let fillColor: Color = this.updateFillColor(this._animatedValue);
 
@@ -71,7 +70,7 @@ class HeroItem extends React.Component<{ hero: Hero, favoriteHeroes: Set<number>
                 }
               ]
             }}>
-              <Svg height="40" width="40" onPress={() => toggleHeroFavoriteStatus(this.props.hero.id, this._animatedValue, this.props.dispatch, this.props.favoriteHeroes)}>
+              <Svg height="40" width="40" onPress={() => this.props.toggleHeroFavoriteStatus(this.props.hero.id, this._animatedValue)}>
                 <Defs>
                   <ClipPath id="clip-rule-clip">
                     <Path d="M20,2L8,40L38,16L2,16L32,40z" />
@@ -178,9 +177,4 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = (state) => {
-  return {
-    favoriteHeroes: state.favoritesHeroes
-  }
-}
-export default connect(mapStateToProps)(HeroItem)
+export default HeroItem;
