@@ -8,19 +8,26 @@ import Svg, {
   Rect,
   Color
 } from 'react-native-svg';
+import { connect } from "react-redux";
+import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper"
 
-class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: Function }, {animatedValue: Animated.Value}> {
+const FAVORITE_ON = "gold";
+const FAVORITE_OFF = "grey";
+
+class HeroItem extends React.Component<{ hero: Hero, favoriteHeroes: Set<number>, dispatch: Function }, {}> {
 
   _myRect;
   AnimatedRect;
+  _animatedValue: Animated.Value
+
   constructor(props) {
     super(props);
-    this.state = {
-      animatedValue: new Animated.Value(0)
-    };
-
-    this.state.animatedValue.addListener( (value) => {
-      let fillColor : Color = this.updateFillColor(this.state.animatedValue);
+    //console.log(this.props);
+    this.state = {};
+    this._animatedValue = new Animated.Value(this.props.favoriteHeroes.has(this.props.hero.id) ? 100 : 0);
+    this._animatedValue.addListener((value) => {
+      console.log("animated value changing");
+      let fillColor: Color = this.updateFillColor(this._animatedValue);
       this._myRect.setNativeProps({ fill: fillColor });
     });
     this.AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -32,7 +39,12 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
 
   render() {
     let winrate = (this.props.hero.pro_win / this.props.hero.pro_pick) * 100;
-    let fillColor : Color = this.updateFillColor(this.state.animatedValue);
+    //When the entire view is refreshing, correct the animated value with current favorite status 
+    Animated.timing(this._animatedValue, { //Doing set value on the animated value will cause some weird problem...
+      duration: 1,
+      toValue: this.props.favoriteHeroes.has(this.props.hero.id) ? 100 : 0,
+    }).start(() => { });
+    let fillColor: Color = this.updateFillColor(this._animatedValue);
 
     return (
       <View style={styles.main_container}>
@@ -44,29 +56,29 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
         <View style={styles.content_container}>
           <View style={styles.header_container}>
             <Animated.View style={{
-                        transform: [
-                            {
-                                scaleX: this.state.animatedValue.interpolate({
-                                    inputRange: [0, 22, 100],
-                                    outputRange: [1, 2, 1]
-                                })
-                            },
-                            {
-                                scaleY: this.state.animatedValue.interpolate({
-                                    inputRange: [0, 88, 100],
-                                    outputRange: [1, 2, 1]
-                                })
-                            }
-                        ]
-                    }}>
-              <Svg height="40" width="40" onPress={() => this.props.toggleHeroFavoriteStatus(this.props.hero.id, this.state.animatedValue, this)}>
+              transform: [
+                {
+                  scaleX: this._animatedValue.interpolate({
+                    inputRange: [0, 22, 100],
+                    outputRange: [1, 2, 1]
+                  })
+                },
+                {
+                  scaleY: this._animatedValue.interpolate({
+                    inputRange: [0, 88, 100],
+                    outputRange: [1, 2, 1]
+                  })
+                }
+              ]
+            }}>
+              <Svg height="40" width="40" onPress={() => toggleHeroFavoriteStatus(this.props.hero.id, this._animatedValue, this.props.dispatch, this.props.favoriteHeroes)}>
                 <Defs>
                   <ClipPath id="clip-rule-clip">
                     <Path d="M20,2L8,40L38,16L2,16L32,40z" />
                   </ClipPath>
                 </Defs>
                 <G clipPath="url(#clip-rule-clip)">
-                  <this.AnimatedRect ref={ ref => this._myRect = ref } x="0" y="0" width="40" height="40" fill={fillColor}/>
+                  <this.AnimatedRect ref={ref => this._myRect = ref} x="0" y="0" width="40" height="40" fill={fillColor} />
                 </G>
               </Svg>
             </Animated.View>
@@ -104,12 +116,12 @@ class HeroItem extends React.Component<{ hero: Hero, toggleHeroFavoriteStatus: F
    * The only way i found to make Animated.AnimatedInterpolation object to string.........
    * @param animatedValue the current animated value
    */
-  private updateFillColor(animatedValue: Animated.Value) : string {
+  private updateFillColor(animatedValue: Animated.Value): string {
     let fillColor = JSON.stringify(animatedValue.interpolate({
       inputRange: [0, 100],
       outputRange: [
-        "grey",
-        "gold"
+        FAVORITE_OFF,
+        FAVORITE_ON
       ]
     })).replace(new RegExp('"', 'g'), '');
     return fillColor;
@@ -166,4 +178,9 @@ const styles = StyleSheet.create({
   }
 });
 
-export default HeroItem;
+const mapStateToProps = (state) => {
+  return {
+    favoriteHeroes: state.favoritesHeroes
+  }
+}
+export default connect(mapStateToProps)(HeroItem)

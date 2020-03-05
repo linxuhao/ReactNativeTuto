@@ -11,21 +11,21 @@ import {
 import { getHeroes } from "../helpers/Data";
 import HeroItem from "./HeroItem";
 import { displayLoading } from "../helpers/LoadingHelper"
-import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper"
 
-class Search extends React.Component<{}, { heroes: Hero[], filteredHeroes: Hero[], isLoading: boolean } > {
+class Search extends React.Component<{}, { filteredHeroes: Hero[], isLoading: boolean } > {
   //Im trying to not call the function setState which triggers re-render everytime i change this value
   //And re-render whenever i change this value is useless here
   _searchString: string;
+  _allHeroes: Hero[];
 
   constructor(props) {
     super(props);
     this.state = {
-      heroes: [],
       filteredHeroes: [],
       isLoading: false
     };
     this._searchString = "";
+    this._allHeroes = [];
   }
 
   private async searchHeroes() {
@@ -41,30 +41,19 @@ class Search extends React.Component<{}, { heroes: Hero[], filteredHeroes: Hero[
     } else {
       filteredData = allHeroes;
     }
-    var stateToSet = this.prepareStateToUpdate(allHeroes, filteredData);
+    var stateToSet = { filteredHeroes: filteredData, isLoading: false };
     this.setState(stateToSet);
   }
 
   private async loadHeros() {
     let allHeroes: Hero[];
-    if (this.state.heroes.length === 0) {
-      await getHeroes().then(data => allHeroes = data, raison => console.log(raison));
+    //load cache if cache is empty
+    if (this._allHeroes.length === 0) {
+      await getHeroes().then(data => this._allHeroes = data, raison => console.log(raison));
     }
-    else {
-      allHeroes = this.state.heroes;
-    }
+    //get data from cache
+    allHeroes = this._allHeroes;
     return allHeroes;
-  }
-
-  private prepareStateToUpdate(allHeroes: Hero[], filteredData: Hero[]) {
-    var stateToSet;
-    if (this.state.heroes.length === 0) {
-      stateToSet = { heroes: allHeroes, filteredHeroes: filteredData, isLoading: false };
-    }
-    else {
-      stateToSet = { filteredHeroes: filteredData, isLoading: false };
-    }
-    return stateToSet;
   }
 
   private filterHeroesByMathKey(allHeroes: Hero[], lowercaseMatchKey: string, filteredData: Hero[]) {
@@ -92,7 +81,7 @@ class Search extends React.Component<{}, { heroes: Hero[], filteredHeroes: Hero[
   }
 
   render() {
-    console.log("render");
+    console.log("Search render");
     //console.log("heroes length : " + this.state.heroes.length);
     //console.log("filteredHeroes length : " + this.state.filteredHeroes.length);
     return (
@@ -115,7 +104,7 @@ class Search extends React.Component<{}, { heroes: Hero[], filteredHeroes: Hero[
             let id = item.id;
             return id.toString();
           }}
-          renderItem={({ item }) => <HeroItem hero={item} toggleHeroFavoriteStatus = {toggleHeroFavoriteStatus} />}
+          renderItem={({ item }) => <HeroItem hero={item} />}
         />
         {displayLoading(this.state.isLoading)}
       </View>
