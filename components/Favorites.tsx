@@ -12,6 +12,7 @@ import { displayLoading } from "../helpers/LoadingHelper"
 import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper"
 import { connect } from 'react-redux'
 import { getHeroes } from "../helpers/Data";
+import HeroList from "./heroList";
 
 class Favorites extends React.Component<{ favoriteHeroes: Set<number>, dispatch: Function }, { isLoading: boolean }> {
 
@@ -62,14 +63,10 @@ class Favorites extends React.Component<{ favoriteHeroes: Set<number>, dispatch:
         return (
             <View style={styles.main_componenet}>
 
-                <FlatList
-                    data={favoriteHeroArray}
-                    keyExtractor={item => {
-                        //console.log(item);
-                        let id = item.id;
-                        return id.toString();
-                    }}
-                    renderItem={({ item }) => <HeroItem hero={item} isFavorite={this.props.favoriteHeroes.has(item.id)} toggleHeroFavoriteStatus={this.toggleHeroFavoriteStatusOnItem.bind(this)} />}
+                <HeroList
+                    heroes={favoriteHeroArray}
+                    favoriteHeroes={this.props.favoriteHeroes}
+                    toggleFavorite={this.toggleHeroFavoriteStatusOnItem.bind(this)}
                 />
                 {displayLoading(this.state.isLoading)}
             </View>

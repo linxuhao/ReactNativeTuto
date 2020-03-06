@@ -14,6 +14,7 @@ import HeroItem from "./HeroItem";
 import { displayLoading } from "../helpers/LoadingHelper"
 import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper";
 import { connect } from "react-redux";
+import HeroList from "./heroList";
 
 class Search extends React.Component<{ favoriteHeroes: Set<number>, dispatch: Function }, { filteredHeroes: Hero[], isLoading: boolean }> {
   //Im trying to not call the function setState which triggers re-render everytime i change this value
@@ -105,14 +106,10 @@ class Search extends React.Component<{ favoriteHeroes: Set<number>, dispatch: Fu
           placeholder="Hero informations"
         />
         <Button title="Search" onPress={() => this.searchHeroes()} />
-        <FlatList
-          data={this.state.filteredHeroes}
-          keyExtractor={item => {
-            //console.log(item);
-            let id = item.id;
-            return id.toString();
-          }}
-          renderItem={({ item }) => <HeroItem hero={item} isFavorite={this.props.favoriteHeroes.has(item.id)} toggleHeroFavoriteStatus={this.toggleHeroFavoriteStatusOnItem.bind(this)} />}
+        <HeroList
+          heroes={this.state.filteredHeroes}
+          favoriteHeroes={this.props.favoriteHeroes}
+          toggleFavorite={this.toggleHeroFavoriteStatusOnItem.bind(this)}
         />
         {displayLoading(this.state.isLoading)}
       </View>
