@@ -8,7 +8,6 @@ import Svg, {
   Rect,
   Color
 } from 'react-native-svg';
-import { connect } from "react-redux";
 
 const FAVORITE_ON = "gold";
 const FAVORITE_OFF = "grey";

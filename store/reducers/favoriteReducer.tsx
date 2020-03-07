@@ -1,11 +1,11 @@
-import { toggleFavoriteActionType } from "../types/toggleFavoriteActionType";
+import { toggleFavoriteActionType, TOGGLE_FAVORITE } from "../types/toggleFavoriteActionType";
 
 const initialState = { favoritesHeroes: new Set<number>() };
 
 export function toggleFavoriteReducer(state = initialState, action: toggleFavoriteActionType) {
   let nextState;
   switch (action.type) {
-    case 'TOGGLE_FAVORITE':
+    case TOGGLE_FAVORITE:
       let isHeroInFavorite = state.favoritesHeroes.has(action.heroId);
       //Copie the set
       let newFavoriteHeroSet = new Set<number>(state.favoritesHeroes);

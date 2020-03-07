@@ -2,17 +2,16 @@ import React from "react";
 import {
     StyleSheet,
     View,
-    FlatList,
     Platform,
     StatusBar,
     Animated
 } from "react-native";
-import HeroItem from "./HeroItem";
-import { displayLoading } from "../helpers/LoadingHelper"
-import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper"
-import { connect } from 'react-redux'
+import { displayLoading } from "../helpers/LoadingHelper";
+import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper";
+import { connect } from 'react-redux';
 import { getHeroes } from "../helpers/Data";
 import HeroList from "./heroList";
+import Avatar from "./Avatar";
 
 class Favorites extends React.Component<{ favoriteHeroes: Set<number>, dispatch: Function }, { isLoading: boolean }> {
 
@@ -62,7 +61,9 @@ class Favorites extends React.Component<{ favoriteHeroes: Set<number>, dispatch:
         }
         return (
             <View style={styles.main_componenet}>
-
+                <View style={styles.avatar_container}>
+                    <Avatar />
+                </View>
                 <HeroList
                     heroes={favoriteHeroArray}
                     favoriteHeroes={this.props.favoriteHeroes}
@@ -80,6 +81,9 @@ const styles = StyleSheet.create({
         marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
         flex: 1
     },
+    avatar_container: {
+        alignItems: 'center'
+    },
     textinput: {
         marginTop: 5,
         marginBottom: 5,
@@ -96,7 +100,7 @@ const mapStateToProps = (state) => {
     //console.log("state");
     //console.log(state);
     return {
-        favoriteHeroes: state.favoritesHeroes
+        favoriteHeroes: state.toggleFavoriteReducer.favoritesHeroes
     }
 }
 export default connect(mapStateToProps)(Favorites)

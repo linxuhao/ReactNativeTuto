@@ -10,8 +10,7 @@ import {
   Animated,
 } from "react-native";
 import { getHeroes } from "../helpers/Data";
-import HeroItem from "./HeroItem";
-import { displayLoading } from "../helpers/LoadingHelper"
+import { displayLoading } from "../helpers/LoadingHelper";
 import { toggleHeroFavoriteStatus } from "../helpers/FavoriteHelper";
 import { connect } from "react-redux";
 import HeroList from "./heroList";
@@ -138,7 +137,7 @@ const mapStateToProps = (state) => {
   //console.log("state");
   //console.log(state);
   return {
-    favoriteHeroes: state.favoritesHeroes
+    favoriteHeroes: state.toggleFavoriteReducer.favoritesHeroes
   }
 }
 export default connect(mapStateToProps)(Search)
