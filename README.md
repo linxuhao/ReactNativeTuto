@@ -17,4 +17,5 @@ Husky to launch test automaticly on git hook : https://github.com/typicode/husky
 
 ## To start the App:
 Run "npm install" to get all the dependencies installed before you try to start the app
+
 To start App, type in console: npm run android (i don't have Mac so i never tested "npm run ios")
