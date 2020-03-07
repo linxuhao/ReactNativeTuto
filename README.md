@@ -16,6 +16,4 @@ Husky to launch test automaticly on git hook : https://github.com/typicode/husky
 
 ## To start the App using expo :
 
-To start App, type in console: npm start (or expo start)
-
-To start React native dev tool , type in console: react-devtools
+To start App, type in console: npm run android (i don't have Mac so i never tested "npm run ios")
