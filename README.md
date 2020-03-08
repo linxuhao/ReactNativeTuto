@@ -20,9 +20,7 @@ Husky to launch test automaticly on git hook : https://github.com/typicode/husky
 
 Because of outdated react version, react native and react native devtools are both low, you need to use "react-devtools@^3" in order to debug this with react devtools : run "npm uninstall -g react-devtools" to uninstall already installed react devtools and run "npm install -g react-devtools@^3". And run "react-devtools" to use it.
 
-## To start App
-
-Type in console: npm run android (i don't have Mac so i never tested "npm run ios")
+### Type in console: npm run android (i don't have Mac so i never tested "npm run ios")
 
 
 ## To build realease for Android
