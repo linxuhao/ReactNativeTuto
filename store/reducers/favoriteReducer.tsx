@@ -1,8 +1,8 @@
 import { toggleFavoriteActionType, TOGGLE_FAVORITE } from "../types/toggleFavoriteActionType";
 
-const initialState = { favoritesHeroes: new Set<number>() };
+export const favoriteInitialState = { favoritesHeroes: new Set<number>() };
 
-export function toggleFavoriteReducer(state = initialState, action: toggleFavoriteActionType) {
+export function toggleFavoriteReducer(state = favoriteInitialState, action: toggleFavoriteActionType): typeof favoriteInitialState {
   let nextState;
   switch (action.type) {
     case TOGGLE_FAVORITE:
@@ -26,7 +26,7 @@ export function toggleFavoriteReducer(state = initialState, action: toggleFavori
         };
       }
       return nextState || state;
-  default:
-    return state;
+    default:
+      return state;
   }
 }

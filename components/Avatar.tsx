@@ -22,7 +22,7 @@ class Avatar extends React.Component<{ avatar: ImageURISource, dispatch: Functio
                 console.log('Erreur : ', response.error)
             }
             else {
-                console.log('Photo : ', response.uri)
+                //console.log('Photo : ', response.uri)
                 let requireSource = { uri: response.uri }
                 let action: changeAvatarActionType = changeAvatarAction(requireSource);
                 //console.log('action : ', action);
@@ -32,7 +32,7 @@ class Avatar extends React.Component<{ avatar: ImageURISource, dispatch: Functio
     }
 
     render() {
-        console.log(this.props);
+        //console.log("Avatar : ", this.props.avatar);
         return (
             <TouchableOpacity
                 style={styles.touchableOpacity}
@@ -61,8 +61,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state) => {
-    console.log("state");
-    console.log(state);
+    //console.log("state");
+    //console.log(state);
     return {
         avatar: state.avatarReducer.avatar_uri
     }

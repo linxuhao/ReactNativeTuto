@@ -2,16 +2,16 @@ import { changeAvatarActionType, CHANGE_AVATAR } from "../types/changeAvatarActi
 
 const initialState = { avatar_uri: require('../../assets/default_avatar.png') };
 
-export function avatarReducer(state = initialState, action: changeAvatarActionType) {
+export function avatarReducer(state = initialState, action: changeAvatarActionType): typeof initialState {
   let nextState;
   switch (action.type) {
     case CHANGE_AVATAR:
-        nextState = {
-          ...state,
-          avatar_uri: action.avatar_uri
-        };
+      nextState = {
+        ...state,
+        avatar_uri: action.avatar_uri
+      };
       return nextState || state;
-  default:
-    return state;
+    default:
+      return state;
   }
 }
