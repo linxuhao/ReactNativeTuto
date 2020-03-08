@@ -5,7 +5,7 @@
     "name": "Dota2HeroFavoritor",
     "slug": "ReactNativeTuto",
     "privacy": "public",
-    "sdkVersion": "29.0.0",
+    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
       "android",
