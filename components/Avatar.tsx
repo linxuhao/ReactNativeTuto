@@ -22,8 +22,8 @@ class Avatar extends React.Component<{ avatar: ImageURISource, dispatch: Functio
                 console.log('Erreur : ', response.error)
             }
             else {
-                //console.log('Photo : ', response.uri)
-                let requireSource = { uri: response.uri }
+                //console.log('Photo : ', response.path)
+                let requireSource = { uri: "file:///" + response.path }
                 let action: changeAvatarActionType = changeAvatarAction(requireSource);
                 //console.log('action : ', action);
                 this.props.dispatch(action);

@@ -53,9 +53,10 @@ buck-out
 .gradle
 local.properties
 *.iml
+/android/build/
 /android/app/build/
-# Android keystores
-/android/keystores/
+/android/app/src/
+
 
 # Node
 node_modules
