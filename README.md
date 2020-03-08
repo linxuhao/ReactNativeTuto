@@ -25,7 +25,7 @@ Because of outdated react version, react native and react native devtools are bo
 
 ## To build realease for Android
 
-Create a assets folder under "{react_native_project_folder}/android/app/src/main"
+Create a "assets" folder under "{react_native_project_folder}/android/app/src/main"
 
 And in project root folder run "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res" to build the js bundle in that folder
 
